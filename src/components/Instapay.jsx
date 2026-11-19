@@ -16,39 +16,47 @@ export default function Instapay() {
   }, [balance, transactions]);
   const deposit = () => {
     let amount = +amountInput.current.value;
-    let newBalance = balance + amount;
-    setBalance(newBalance);
-    amountInput.current.value = "";
-    let newTrans = {
-      beforeBalance: balance,
-      type: "Deposit",
-      amount: amount,
-      afterBalance: newBalance,
-    };
-    let copy = [...transactions];
-    copy.push(newTrans);
-    setTransaction(copy);
-    toast.success("Successfully Process!");
-  };
-  const withdraw = () => {
-    let amount = +amountInput.current.value;
-    if (amount <= balance) {
-      let newBalance = balance - amount;
+    if (amount >= 0) {
+      let newBalance = balance + amount;
       setBalance(newBalance);
-      toast.success("Successfully Process!");
-
       amountInput.current.value = "";
       let newTrans = {
         beforeBalance: balance,
-        type: "Withdraw",
+        type: "Deposit",
         amount: amount,
         afterBalance: newBalance,
       };
       let copy = [...transactions];
       copy.push(newTrans);
       setTransaction(copy);
+      toast.success("Successfully Process!");
     } else {
-      toast.error("Insufficient Process!");
+      toast.error("Enter a Valid Number");
+    }
+  };
+  const withdraw = () => {
+    let amount = +amountInput.current.value;
+    if (amount >= 0) {
+      if (amount <= balance) {
+        let newBalance = balance - amount;
+        setBalance(newBalance);
+        toast.success("Successfully Process!");
+
+        amountInput.current.value = "";
+        let newTrans = {
+          beforeBalance: balance,
+          type: "Withdraw",
+          amount: amount,
+          afterBalance: newBalance,
+        };
+        let copy = [...transactions];
+        copy.push(newTrans);
+        setTransaction(copy);
+      } else {
+        toast.error("Insufficient Process!");
+      }
+    } else {
+      toast.error("Enter a Valid Number");
     }
   };
   return (
